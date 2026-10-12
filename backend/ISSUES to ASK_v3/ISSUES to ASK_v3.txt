@@ -5,3 +5,47 @@ ISSUES to ASK_v3-------------
 2. More Deeper Breakdown again LATER for:
     Counter.js + idService.js ?????????|
     FLOW of Connection between Counter.js + idService.js
+
+3. // ???????? why categoryId not "required" in Category.js Model ??????
+   // ????????? why not  isActive: {
+      type: Boolean,
+      default: true,
+    },
+    in Category model?
+
+    // // // is this "categoryId" mongoDb's or Custom. if custom id, wont it crash with "Fooditem" Model's referece "categoryId"  ??????
+
+4.   // ??? how to update "unit" of "amount" of Fooditem model to dynamic entry later in Fooditem.js  ??? 
+// how to dynamically turn it to plural nouns with increasing amount ??????????
+code:
+unit: {
+      type: String,
+      required: true,
+      enum: ["kg", "box", "packet", "piece", "liter"],}
+
+5. FoodItem.js Model :
+"consider storing monetary values as integer minor units or using MongoDB's Decimal128 type." ?????????? why not now in this project ??????
+
+
+6. Customer.js Model:
+// addresses: [
+      {
+        label: { type: String, default: "Home" },
+       }] // ??????? how the default "Home" value will change in 2nd address label ???
+
+       // //  address: 
+        isDefault: { type: Boolean, default: false }, // ?????? what does it refer to?????
+
+        // // default :" " 
+        does it mean "optional" in mongodb 
+      
+
+7. User.js:
+???????????For your first single-business version, you can allow one owner account and disable public registration after setting it up. A registration endpoint that stays publicly accessible indefinitely would allow strangers to create accounts. Before public deployment, restrict registration to an invitation or an owner-controlled setup process.???????????
+
+Order.js Model:
+    // quantity: { type: Number, required: true, min: 0.001 }, // 
+    ???? why quantuty minimum 0.001 ???????
+
+    // // breakdowns of "Defaults" with reasons
+
