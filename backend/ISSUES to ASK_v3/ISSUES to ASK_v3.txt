@@ -134,3 +134,9 @@ Order.js Model:
         app.use(errorMiddleware);
         // // not yet created ---------------------
         export default app;
+
+
+11. emailService.js : 
+Nodemailer: ?????????? check for changes in .env after uninstallation of initially used "Resend" Package??????
+
+
