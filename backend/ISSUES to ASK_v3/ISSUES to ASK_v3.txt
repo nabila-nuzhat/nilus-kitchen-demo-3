@@ -139,4 +139,8 @@ Order.js Model:
 11. emailService.js : 
 Nodemailer: ?????????? check for changes in .env after uninstallation of initially used "Resend" Package??????
 
+12. validate.js :
+look for simpler version of map, join for understanding
 
+13. authController.js :
+look for simpler version of code for understanding for learning Stage.
