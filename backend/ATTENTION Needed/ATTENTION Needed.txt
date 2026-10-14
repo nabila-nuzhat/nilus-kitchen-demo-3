@@ -1,0 +1,57 @@
+Before Deployment-------------------------------------------
+
+    - One security improvement: because Nilus Kitchen is intended for a single business owner, do not leave public owner registration open indefinitely. Use a controlled initial owner-setup process, and then disable or restrict registration.
+
+    What actually needs attention before deployment?
+        Feature	Can it work on Vercel?	What you need
+        Owner login with JWT	Yes	Correct environment variables and secure authentication
+        Email verification	Yes	Working email provider, deployed URLs and verification endpoint
+        PDF receipt generation	Yes	Generate PDF in memory and return it correctly
+        MongoDB storage	Yes	A remotely accessible database, such as MongoDB Atlas
+        Email resend after failure	Requires additional implementation	A resend endpoint and safe handling of pending verification
+        Verification success page	Yes	A React page or redirect after verification
+        Owner-only registration	Yes	Restrict registration so strangers cannot create owner accounts
+        For email specifically, Vercel permits outgoing SMTP connections other than port 25, but recommends an email service such as Resend, SendGrid or Amazon SES for deployed applications. You can try your current Nodemailer/Gmail approach first, provided the provider and deployment allow it; you do not have to discard the feature. 
+
+        Vercel Knowledge Base(https://vercel.com/kb/guide/serverless-functions-and-smtp)
+
+    4. recommendation for your beginner project
+    Keep both features. Do not remove email verification or PDF generation just because you plan to deploy to Vercel.
+    Build and test them in this order:
+        1. Finish registration, verification and login locally.
+        2. Test PDF generation locally using a saved order.
+        3. Push the working code to GitHub.
+        4. Deploy the frontend and backend, configure the production environment variables, and connect the deployed backend to MongoDB Atlas.
+        5. Test verification using a real email and test PDF downloads using a real saved order on the deployed website.
+        6. Improve registration restrictions, resend verification and the success page before treating the app as production-ready.
+
+        One final distinction: a feature that works locally is not automatically guaranteed to work after deployment. But your current choices—Nodemailer, JWT, MongoDB and pdf-lib—do not make either feature inherently incompatible with Vercel.
+
+______________________________________________________
+CLAUDE suggest for authController.js:
+Small improvements to consider
+    - Timing attack on login: when the email doesn’t exist, you skip bcrypt.compare, so the response is faster. Attackers can measure that. A common fix is to compare against a dummy hash when no user is found.
+    
+    - Unique index on email in the schema, to close the race condition in register.
+
+    - Rate limiting on /login and /register (for example express-rate-limit) against brute force.
+
+    - bcrypt’s 72-byte limit: it ignores anything past 72 bytes of the password, so your Zod schema should cap password length.
+        - Why cap password length because of bcrypt’s 72-byte limit?
+            bcrypt is built on the Blowfish cipher, whose key setup uses at most 72 bytes. Anything beyond that is silently ignored (truncated). This causes three problems:
+
+            Fake security. If a user sets an 80-character password, only the first 72 bytes count. Two passwords that differ only after byte 72 are treated as identical, and you wouldn’t know.
+            Characters are not bytes. The limit is in bytes, not characters. In UTF-8 (the text encoding), a is 1 byte, but characters like é take 2 and Bangla letters like আ take 3. So a Bangla password of 30 characters can reach about 90 bytes and get cut off.
+            Abuse. Without a maximum, someone can send a multi-megabyte “password” to make your server process huge input. A cap rejects it early.
+
+            A cap makes the limit explicit and honest: the user is told, instead of being silently truncated. In Zod, you can check bytes rather than characters:
+                    password: z
+                    .string()
+                    .min(8)
+                    .refine((pw) => Buffer.byteLength(pw, "utf8") <= 72, {
+                        message: "Password must be at most 72 bytes",
+                    })
+                    Buffer.byteLength(string, encoding) returns a number, the size in bytes.
+                    .refine(checkFn, options) adds a custom rule. checkFn takes the value and returns a boolean.
+
+            Advanced projects sometimes pre-hash the password with SHA-256 to avoid the limit, but for your project a byte cap is simpler and perfectly fine.
