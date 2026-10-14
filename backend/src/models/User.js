@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
     name: { 
       type: String, 
       required: true, 
-      trim: true },
+      trim: true,
+    },
 
     email: {
       type: String,
@@ -30,6 +31,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false, // It’s a safety measure. If later do something like res.json(user), the hash won’t accidentally leak to the client because it was never loaded.
    },
+
     isEmailVerified: { 
       type: Boolean, 
       default: false 
@@ -44,7 +46,6 @@ const userSchema = new mongoose.Schema(
               // - They only need values while verification is pending.
               // - After successful verification, the token hash and expiry date can be removed.
               // - Your code already checks whether a valid, unexpired token exists.
-          
     },
 
     emailVerificationExpiresAt: {
@@ -56,12 +57,23 @@ const userSchema = new mongoose.Schema(
               // - They only need values while verification is pending.
               // - After successful verification, the token hash and expiry date can be removed.
               // - Your code already checks whether a valid, unexpired token exists.
-          
-      
     },
+
+    role: { // leaves room for staff accounts later. It does not, by itself, implement moderator permissions. "staff" replaced by "moderator" 
+      type: String,
+      enum: ["owner", "moderator"],
+      default: "owner",
+    },   
   },
 
-  { timestamps: true }
+  { 
+    timestamps: true 
+  }
 );
 
 export default mongoose.model("User", userSchema);
+
+/** ??????
+ * const User = mongoose.model("User", userSchema);
+  export default User;
+  */;
