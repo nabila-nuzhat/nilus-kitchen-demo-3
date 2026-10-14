@@ -1,6 +1,5 @@
 /**
  * using node mailer, app password generator
- * 
  * SMTP_PASS must be the generated Google App Password, not your normal Gmail password.
 To create one:
 1. Open your Google Account security settings.
@@ -8,9 +7,12 @@ To create one:
 3. Open the App Passwords page, if available for your account.
 4. Generate an App Password and copy it into your local .env.
 Some accounts or security configurations may not offer App Passwords. If yours does not, use OAuth 2.0 or a suitable email API instead. 
-
+ * 
+ * For a portfolio project, this is a straightforward implementation. A production version should also rate-limit verification requests and avoid leaking account details through error messages.
+ * 
 Nodemailer: ?????????? check for changes in .env after uninstallation of initially used "Resend" Package??????
  */
+
 
 
 import nodemailer from "nodemailer";
