@@ -55,3 +55,12 @@ Small improvements to consider
                     .refine(checkFn, options) adds a custom rule. checkFn takes the value and returns a boolean.
 
             Advanced projects sometimes pre-hash the password with SHA-256 to avoid the limit, but for your project a byte cap is simpler and perfectly fine.
+
+______________________________________________________
+authMiddleware.js
+    - Things worth improving (good learning points)
+        - Catch is too broad. A database outage would also say “Invalid or expired token” with a 401. Ideally, a server error should return 500.
+        - Unverified email should arguably be 403 Forbidden, not 401. Rule of thumb: 401 = “I don’t know who you are”, 403 = “I know who you are, but you’re not allowed.”
+        - Check process.env.JWT_SECRET exists at startup. If it’s undefined, jwt.verify throws, and every request fails with a misleading message.
+        - Sensitive fields: if User has a password field, make sure it’s select: false in the schema so req.owner never carries the password hash.
+        - Naming: requireOwner only checks authentication (who you are). If it should also check ownership (that this resource belongs to you), that logic belongs in the route handler.
