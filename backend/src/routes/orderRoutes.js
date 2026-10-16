@@ -3,6 +3,7 @@
  * viewing, confirmation, cancellation, and PDF receipt downloads
  */
 import { Router } from "express";
+import { downloadReceipt } from "../controllers/orderController.js";
 
 import {
   getOrders,
