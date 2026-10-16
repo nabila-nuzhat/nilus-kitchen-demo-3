@@ -38,9 +38,8 @@
 /** INITIAL written app.js code (during SERVER + DB SETUP) - end ========================================
  * 
  */
-// ====================================
 
-/** NEW app.js code (after adding ROUTES Files) - start ========================================
+/** NEW app.js code (after adding ROUTES Files) - start ======================================================
  * 
  * check for compatibility LATER between INITIAL & NEW line of CODE block
  * 
@@ -52,10 +51,12 @@
 import express from "express";
 import cors from "cors";
 
-// import authRoutes from "./routes/authRoutes.js";
-// import catalogRoutes from "./routes/catalogRoutes.js";
-// import customerRoutes from "./routes/customerRoutes.js";
-// import orderRoutes from "./routes/orderRoutes.js";
+
+import authRoutes from "./routes/authRoutes.js";
+import catalogRoutes from "./routes/catalogRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
 
 const app = express();
 
@@ -76,11 +77,12 @@ app.get("/api/health", (req, res) => {
 });
 
 // Register API routers.
-// app.use("/api/auth", authRoutes);
-// app.use("/api/catalog", catalogRoutes);
-// app.use("/api/customers", customerRoutes);
-// app.use("/api/orders", orderRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/catalog", catalogRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/orders", orderRoutes);
 
+app.use(errorMiddleware);
 export default app;
 
 
