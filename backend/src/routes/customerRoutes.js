@@ -11,11 +11,14 @@ import {
   deleteCustomer,
 } from "../controllers/customerController.js";
 
-import { protect } from "../middleware/authMiddleware.js";
+//import { protect } from "../middleware/authMiddleware.js";  // // "protect" replaced by "requireOwner" in authMiddleware
+import { requireOwner } from "../middleware/authMiddleware.js";
+
 
 const router = Router();
 
-router.use(protect);
+//router.use(protect);  // // "protect" replaced by "requireOwner" in authMiddleware
+router.use(requireOwner);
 
 router.get("/", getCustomers);
 router.get("/:id", getCustomerById);

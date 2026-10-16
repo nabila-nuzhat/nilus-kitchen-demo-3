@@ -18,12 +18,14 @@ import {
   deleteFoodItem,
 } from "../controllers/catalogController.js";
 
-import { protect } from "../middleware/authMiddleware.js";
+// import { protect } from "../middleware/authMiddleware.js"; // // "protect" replaced by "requireOwner" in authMiddleware
+import { requireOwner } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
 // All catalog endpoints require owner login.
-router.use(protect);
+// router.use(protect);  // // "protect" replaced by "requireOwner" in authMiddleware
+router.use(requireOwner);
 
 // Categories
 router.get("/categories", getCategories);

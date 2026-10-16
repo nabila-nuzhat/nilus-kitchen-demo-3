@@ -14,11 +14,15 @@ import {
   downloadReceipt,
 } from "../controllers/orderController.js";
 
-import { protect } from "../middleware/authMiddleware.js";
+//import { protect } from "../middleware/authMiddleware.js"; // // "protect" replaced by "requireOwner" in authMiddleware
+import { requireOwner } from "../middleware/authMiddleware.js";
+
 
 const router = Router();
 
-router.use(protect);
+//router.use(protect); // // "protect" replaced by "requireOwner" in authMiddleware
+router.use(requireOwner);
+
 
 // View orders.
 router.get("/", getOrders);
