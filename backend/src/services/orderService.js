@@ -1,3 +1,5 @@
+/** CHECK FOR UPDATES ----------------------- */
+
 import FoodItem from "../models/FoodItem.js";
 import Customer from "../models/Customer.js";
 import Order from "../models/Order.js";
