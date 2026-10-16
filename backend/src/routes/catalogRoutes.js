@@ -5,6 +5,47 @@
  * 
  * ********* ???????Important: Before implementing deletion, ensure a category cannot be deleted while food items still reference it. For food items already used in orders, prefer marking them inactive instead of permanently deleting them. ????????????????
  */
+
+
+/** OLD UPDATE------------- ----------------------- */
+// import { Router } from "express";
+
+// import {
+//   getCategories,
+//   createCategory,
+//   updateCategory,
+//   deleteCategory,
+//   getFoodItems,
+//   createFoodItem,
+//   updateFoodItem,
+//   deleteFoodItem,
+// } from "../controllers/catalogController.js";
+
+// // import { protect } from "../middleware/authMiddleware.js"; // // "protect" replaced by "requireOwner" in authMiddleware
+// import { requireOwner } from "../middleware/authMiddleware.js";
+
+// const router = Router();
+
+// // All catalog endpoints require owner login.
+// // router.use(protect);  // // "protect" replaced by "requireOwner" in authMiddleware
+// router.use(requireOwner);
+
+// // Categories
+// router.get("/categories", getCategories);
+// router.post("/categories", createCategory);
+// router.patch("/categories/:id", updateCategory);
+// router.delete("/categories/:id", deleteCategory);
+
+// // Food items
+// router.get("/food-items", getFoodItems);
+// router.post("/food-items", createFoodItem);
+// router.patch("/food-items/:id", updateFoodItem);
+// router.delete("/food-items/:id", deleteFoodItem);
+
+// export default router;
+
+/** NEW UPDATE (corrected)------------- ----------------------- */
+
 import { Router } from "express";
 
 import {
@@ -18,25 +59,52 @@ import {
   deleteFoodItem,
 } from "../controllers/catalogController.js";
 
-// import { protect } from "../middleware/authMiddleware.js"; // // "protect" replaced by "requireOwner" in authMiddleware
 import { requireOwner } from "../middleware/authMiddleware.js";
+import { validate } from "../middleware/validate.js";
+import {
+  categorySchema,
+  foodItemSchema,
+  updateCategorySchema,
+  updateFoodItemSchema,
+} from "../schemas/commonSchema.js";
 
 const router = Router();
 
-// All catalog endpoints require owner login.
-// router.use(protect);  // // "protect" replaced by "requireOwner" in authMiddleware
+// Every catalog endpoint requires an authenticated owner.
 router.use(requireOwner);
 
 // Categories
 router.get("/categories", getCategories);
-router.post("/categories", createCategory);
-router.patch("/categories/:id", updateCategory);
+
+router.post(
+  "/categories",
+  validate(categorySchema),
+  createCategory
+);
+
+router.patch(
+  "/categories/:id",
+  validate(updateCategorySchema),
+  updateCategory
+);
+
 router.delete("/categories/:id", deleteCategory);
 
 // Food items
 router.get("/food-items", getFoodItems);
-router.post("/food-items", createFoodItem);
-router.patch("/food-items/:id", updateFoodItem);
+
+router.post(
+  "/food-items",
+  validate(foodItemSchema),
+  createFoodItem
+);
+
+router.patch(
+  "/food-items/:id",
+  validate(updateFoodItemSchema),
+  updateFoodItem
+);
+
 router.delete("/food-items/:id", deleteFoodItem);
 
 export default router;
