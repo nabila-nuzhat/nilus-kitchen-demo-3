@@ -1,3 +1,5 @@
+/** CHECK FOR UPDATES ----------------------- */
+
 import Category from "../models/Category.js";
 import FoodItem from "../models/FoodItem.js";
 import { generateCustomId } from "../services/idService.js";
